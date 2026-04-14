@@ -1,23 +1,34 @@
-from mmengine.config import read_base
 from opencompass.openicl.icl_prompt_template import PromptTemplate
 from opencompass.openicl.icl_retriever import ZeroRetriever
-from opencompass.openicl.icl_inferencer import GenInferencer 
+from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccEvaluator
-from opencompass.datasets import HellaswagDataset 
+from opencompass.datasets import HellaswagDataset
+from opencompass.utils.text_postprocessors import first_option_postprocess
 
-# ✅ Standard HellaSwag Reader
 hellaswag_hi_reader_cfg = dict(
-    input_columns=['ctx', 'endings'],
+    input_columns=['ctx', 'A', 'B', 'C', 'D'],
     output_column='label'
 )
 
-# ✅ Hindi-Specific Generative Prompt
 hellaswag_hi_infer_cfg = dict(
     prompt_template=dict(
         type=PromptTemplate,
         template=dict(
             round=[
-                dict(role='HUMAN', prompt='अधूरे वाक्य को पूरा करने के लिए सबसे उपयुक्त विकल्प चुनें:\nविवरण: {ctx}\n\nविकल्प:\nA. {endings[0]}\nB. {endings[1]}\nC. {endings[2]}\nD. {endings[3]}\n\nउत्तर: '),
+                dict(
+                    role='HUMAN',
+                    prompt=(
+                        'अधूरे वाक्य को पूरा करने के लिए सबसे उपयुक्त विकल्प चुनें:\n'
+                        'विवरण: {ctx}\n\n'
+                        'विकल्प:\n'
+                        'A. {A}\n'
+                        'B. {B}\n'
+                        'C. {C}\n'
+                        'D. {D}\n\n'
+                        'केवल A, B, C, या D में उत्तर दें।\n'
+                        'उत्तर:'
+                    )
+                ),
             ],
         ),
     ),
@@ -28,14 +39,14 @@ hellaswag_hi_infer_cfg = dict(
 hellaswag_hi_eval_cfg = dict(
     evaluator=dict(type=AccEvaluator),
     pred_role='BOT',
+    pred_postprocessor=dict(type=first_option_postprocess, options='ABCD'),
 )
 
 hellaswag_hi_datasets = [
     dict(
         abbr='hellaswag_hi',
         type=HellaswagDataset,
-        # ✅ Pointing to your exact /fsx/ path
-        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/data/hellaswag_hi',
+        path='/fsxnew/fsxnew/fsxnew/dhrumil.shah/opencompass_benchmarks/data/hellaswag_indic/hi_label_fixed.jsonl',
         reader_cfg=hellaswag_hi_reader_cfg,
         infer_cfg=hellaswag_hi_infer_cfg,
         eval_cfg=hellaswag_hi_eval_cfg,

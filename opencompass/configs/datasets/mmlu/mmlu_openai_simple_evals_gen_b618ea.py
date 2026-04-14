@@ -4,7 +4,7 @@ from opencompass.openicl.icl_retriever import ZeroRetriever
 from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccEvaluator
 from opencompass.datasets import MMLUDataset
-from opencompass.utils.text_postprocessors import match_answer_pattern
+from opencompass.utils.text_postprocessors import first_option_postprocess
 
 with read_base():
     from .mmlu_all_sets import mmlu_all_sets
@@ -12,16 +12,15 @@ with read_base():
 # None of the mmlu dataset in huggingface is correctly parsed, so we use our own dataset reader
 # Please download the dataset from https://people.eecs.berkeley.edu/~hendrycks/data.tar
 
-QUERY_TEMPLATE = """
-Answer the following multiple choice question. The last line of your response should be of the following format: 'ANSWER: $LETTER' (without quotes) where LETTER is one of ABCD. Think step by step before answering.
-
-{input}
-
-A) {A}
-B) {B}
-C) {C}
-D) {D}
-""".strip()
+QUERY_TEMPLATE = (
+    'Question: {input}\n'
+    'A. {A}\n'
+    'B. {B}\n'
+    'C. {C}\n'
+    'D. {D}\n'
+    'Answer with only A, B, C, or D.\n'
+    'Answer:'
+)
 
 mmlu_reader_cfg = dict(
     input_columns=['input', 'A', 'B', 'C', 'D'],
@@ -45,7 +44,7 @@ for name in mmlu_all_sets:
 
     mmlu_eval_cfg = dict(
         evaluator=dict(type=AccEvaluator),
-        pred_postprocessor=dict(type=match_answer_pattern, answer_pattern=r'(?i)ANSWER\s*:\s*([A-D])'))
+        pred_postprocessor=dict(type=first_option_postprocess, options='ABCD'))
 
     mmlu_datasets.append(
         dict(

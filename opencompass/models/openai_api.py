@@ -244,6 +244,12 @@ class OpenAI(BaseAPIModel):
             input, max_out_len, self.max_seq_len, self.mode,
             self.get_token_len)
 
+        url_check = self.url[0] if isinstance(self.url, list) else self.url
+        use_completion = "/completions" in url_check and "/chat/completions" not in url_check
+
+        if use_completion:
+            prompt = "\n".join([m["content"] for m in messages])
+
         max_num_retries = 0
         while max_num_retries < self.retry:
             key = self._next_valid_key()
@@ -263,33 +269,41 @@ class OpenAI(BaseAPIModel):
 
             self.acquire()
             try:
-                if any(model in self.path
-                       for model in OAI_REASONING_MODEL_LIST):
-                    self.logger.warning(
-                        f"'max_token' is unsupported for model {self.path}")
-                    self.logger.warning(
-                        f'We use max_out_len: {max_out_len} for this query')
+                if use_completion:
                     data = dict(
                         model=self.path,
-                        messages=messages,
-                        max_completion_tokens=max_out_len,
+                        prompt=prompt,
+                        max_tokens=max_out_len,
                         n=1,
-                        logprobs=self.logprobs,
-                        top_logprobs=self.top_logprobs,
-                        stop=None,
                         temperature=temperature,
                     )
                 else:
-                    data = dict(
-                        model=self.path,
-                        messages=messages,
-                        max_tokens=max_out_len,
-                        n=1,
-                        logprobs=self.logprobs,
-                        top_logprobs=self.top_logprobs,
-                        stop=None,
-                        temperature=temperature,
-                    )
+                    if any(model in self.path for model in OAI_REASONING_MODEL_LIST):
+                        self.logger.warning(
+                            f"'max_token' is unsupported for model {self.path}")
+                        self.logger.warning(
+                            f'We use max_out_len: {max_out_len} for this query')
+                        data = dict(
+                            model=self.path,
+                            messages=messages,
+                            max_completion_tokens=max_out_len,
+                            n=1,
+                            logprobs=self.logprobs,
+                            top_logprobs=self.top_logprobs,
+                            stop=None,
+                            temperature=temperature,
+                        )
+                    else:
+                        data = dict(
+                            model=self.path,
+                            messages=messages,
+                            max_tokens=max_out_len,
+                            n=1,
+                            logprobs=self.logprobs,
+                            top_logprobs=self.top_logprobs,
+                            stop=None,
+                            temperature=temperature,
+                        )
                 if self.extra_body:
                     data.update(self.extra_body)
                 if isinstance(self.url, list):
@@ -332,27 +346,32 @@ class OpenAI(BaseAPIModel):
                 if self.logprobs:
                     return response['choices']
                 else:
-                    # Extract content and reasoning_content from response
-                    message = response['choices'][0]['message']
-                    content = message.get('content', '') or ''
-                    reasoning_content = message.get('reasoning_content',
-                                                    '') or ''
-
-                    # Handle reasoning_content similar to OpenAISDK
-                    if reasoning_content:
-                        if self.verbose:
-                            self.logger.info(
-                                'Extracting reasoning content and tags.'
-                                'Reasoning Content: %s, \n'
-                                'Tags: %s, \n'
-                                'Content: %s', reasoning_content,
-                                self.think_tag, content)
-
-                        if content:
-                            return reasoning_content + self.think_tag + content
-                        else:
-                            return reasoning_content
+                    if use_completion:
+                        content = response['choices'][0].get('text', '')
+                        return content.strip()
                     else:
+                        # Extract content and reasoning_content from response
+                        message = response['choices'][0]['message']
+                        content = message.get('content', '') or ''
+                        reasoning_content = message.get('reasoning_content',
+                                                        '') or ''
+
+                        # # Handle reasoning_content similar to OpenAISDK
+                        # if reasoning_content:
+                        #     if self.verbose:
+                        #         self.logger.info(
+                        #             'Extracting reasoning content and tags.'
+                        #             'Reasoning Content: %s, \n'
+                        #             'Tags: %s, \n'
+                        #             'Content: %s', reasoning_content,
+                        #             self.think_tag, content)
+
+                        #     if content:
+                        #         return reasoning_content + self.think_tag + content
+                        #     else:
+                        #         return reasoning_content
+                        # else:
+                        #     return content.strip()
                         return content.strip()
             except requests.ConnectionError:
                 self.logger.error('Got connection error, retrying...')

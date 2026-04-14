@@ -19,7 +19,10 @@ humaneval_infer_cfg = dict(
     inferencer=dict(type=GenInferencer))
 
 humaneval_eval_cfg = dict(
-    evaluator=dict(type=HumanEvalEvaluator),
+    evaluator=dict(
+        type=HumanEvalEvaluator,
+        k=[2, 8, 16, 32, 64]   # <-- add this
+    ),
     pred_role='BOT',
     pred_postprocessor=dict(type=humaneval_postprocess_v2),
 )
@@ -32,6 +35,6 @@ humaneval_datasets = [
         reader_cfg=humaneval_reader_cfg,
         infer_cfg=humaneval_infer_cfg,
         eval_cfg=humaneval_eval_cfg,
-        n=5,
-        k=3)
+        n=64
+        )
 ]
