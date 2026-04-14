@@ -4,20 +4,20 @@ from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccEvaluator
 from opencompass.datasets.custom_indic import CustomJsonlMCQDataset
 
-BASE_PATH = "/fsxnew/dhrumil.shah/opencompass_benchmarks/data/boolq_indic"
+BASE_PATH = '/fsxnew/dhrumil.shah/opencompass_benchmarks/data/boolq_indic'
 
 languages = [
-    "en",
-    "hi",
-    "bn",
-    "mr",
-    "pa",
-    "gu",
-    "kn",
-    "ml",
-    "ta",
-    "te",
-    "or"
+    'en',
+    'hi',
+    'bn',
+    'mr',
+    'pa',
+    'gu',
+    'kn',
+    'ml',
+    'ta',
+    'te',
+    'or'
 ]
 
 boolq_indic_datasets = []
@@ -26,21 +26,21 @@ for lang in languages:
 
     boolq_indic_datasets.append(
         dict(
-            abbr=f"boolq_indic_{lang}",
+            abbr=f'boolq_indic_{lang}',
 
             type=CustomJsonlMCQDataset,
 
-            path=f"{BASE_PATH}/{lang}.jsonl",
+            path=f'{BASE_PATH}/{lang}.jsonl',
 
-            question_key="question",
+            question_key='question',
 
-            context_key="passage",
+            context_key='passage',
 
-            answer_key="answer",
+            answer_key='answer',
 
             reader_cfg=dict(
-                input_columns=["passage", "question"],
-                output_column="answer"
+                input_columns=['passage', 'question'],
+                output_column='answer'
             ),
 
             infer_cfg=dict(
@@ -49,12 +49,12 @@ for lang in languages:
                     template=dict(
                         round=[
                             dict(
-                                role="HUMAN",
+                                role='HUMAN',
                                 prompt=(
-                                    "Passage: {passage}\n\n"
-                                    "Question: {question}\n\n"
+                                    'Passage: {passage}\n\n'
+                                    'Question: {question}\n\n'
                                     "Answer with only 'yes' or 'no'.\n"
-                                    "Answer:"
+                                    'Answer:'
                                 )
                             ),
                         ]
@@ -69,7 +69,7 @@ for lang in languages:
             eval_cfg=dict(
                 evaluator=dict(type=AccEvaluator),
 
-                pred_role="BOT",
+                pred_role='BOT',
             )
         )
     )

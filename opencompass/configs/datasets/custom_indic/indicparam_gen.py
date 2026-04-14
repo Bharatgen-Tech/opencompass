@@ -7,16 +7,16 @@ from opencompass.utils.text_postprocessors import first_option_postprocess
 
 import os
 
-base_path = "/fsxnew/dhrumil.shah/opencompass_benchmarks/data/indic_param_indic"
+base_path = '/fsxnew/dhrumil.shah/opencompass_benchmarks/data/indic_param_indic'
 
 indic_param_indic_datasets = []
 
 
 for file in sorted(os.listdir(base_path)):
-    if not file.endswith(".jsonl"):
+    if not file.endswith('.jsonl'):
         continue
 
-    lang = file.replace(".jsonl", "")
+    lang = file.replace('.jsonl', '')
 
     indic_param_indic_datasets.append(
         dict(
@@ -43,16 +43,16 @@ for file in sorted(os.listdir(base_path)):
                             dict(
                                 role='HUMAN',
                                 prompt=(
-                                    "Question: {question}\n"
-                                    "Options:\n"
-                                    "A) {A}\n"
-                                    "B) {B}\n"
-                                    "C) {C}\n"
-                                    "D) {D}\n"
-                                    "The above question is written in {lang} language. Please analyze "
-                                    "the question and options carefully, and select the correct answer.\n"
-                                    "Respond ONLY with one letter (A, B, C, or D) corresponding to the "
-                                    "correct option. Do not provide any explanation or additional text."
+                                    'Question: {question}\n'
+                                    'Options:\n'
+                                    'A) {A}\n'
+                                    'B) {B}\n'
+                                    'C) {C}\n'
+                                    'D) {D}\n'
+                                    'The above question is written in {lang} language. Please analyze '
+                                    'the question and options carefully, and select the correct answer.\n'
+                                    'Respond ONLY with one letter (A, B, C, or D) corresponding to the '
+                                    'correct option. Do not provide any explanation or additional text.'
                                 )
                             )
                         ]

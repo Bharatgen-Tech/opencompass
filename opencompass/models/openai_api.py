@@ -245,10 +245,11 @@ class OpenAI(BaseAPIModel):
             self.get_token_len)
 
         url_check = self.url[0] if isinstance(self.url, list) else self.url
-        use_completion = "/completions" in url_check and "/chat/completions" not in url_check
+        use_completion = ('/completions' in url_check
+                          and '/chat/completions' not in url_check)
 
         if use_completion:
-            prompt = "\n".join([m["content"] for m in messages])
+            prompt = '\n'.join([m['content'] for m in messages])
 
         max_num_retries = 0
         while max_num_retries < self.retry:
@@ -278,11 +279,14 @@ class OpenAI(BaseAPIModel):
                         temperature=temperature,
                     )
                 else:
-                    if any(model in self.path for model in OAI_REASONING_MODEL_LIST):
+                    if any(model in self.path
+                           for model in OAI_REASONING_MODEL_LIST):
                         self.logger.warning(
-                            f"'max_token' is unsupported for model {self.path}")
+                            f"'max_token' is unsupported for model {self.path}"
+                        )
                         self.logger.warning(
-                            f'We use max_out_len: {max_out_len} for this query')
+                            f'We use max_out_len: {max_out_len} for this query'
+                        )
                         data = dict(
                             model=self.path,
                             messages=messages,
@@ -353,8 +357,8 @@ class OpenAI(BaseAPIModel):
                         # Extract content and reasoning_content from response
                         message = response['choices'][0]['message']
                         content = message.get('content', '') or ''
-                        reasoning_content = message.get('reasoning_content',
-                                                        '') or ''
+                        reasoning_content = message.get(  # noqa: F841
+                            'reasoning_content', '') or ''  # noqa: F841
 
                         # # Handle reasoning_content similar to OpenAISDK
                         # if reasoning_content:
@@ -367,7 +371,9 @@ class OpenAI(BaseAPIModel):
                         #             self.think_tag, content)
 
                         #     if content:
-                        #         return reasoning_content + self.think_tag + content
+                        #         return (reasoning_content
+                        #                + self.think_tag
+                        #                + content)
                         #     else:
                         #         return reasoning_content
                         # else:

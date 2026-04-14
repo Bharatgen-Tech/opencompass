@@ -286,7 +286,6 @@ def extract_non_reasoning_content(
     return non_reasoning_content
 
 
-
 # # ──────────────────────────────────────────────────────────────────────────────
 # # BBH (BIG-Bench Hard) postprocessor
 # # ──────────────────────────────────────────────────────────────────────────────
@@ -338,13 +337,11 @@ def extract_non_reasoning_content(
 #     'tracking_shuffled_objects_three_objects',
 # }
 
-
 # def _bbh_extract_yesno(text: str) -> str:
 #     match = re.search(r'\b(Yes|No)\b', text, re.IGNORECASE)
 #     if match:
 #         return match.group(1).capitalize()
 #     return text.strip().split()[0] if text.strip() else ''
-
 
 # def _bbh_extract_truefalse(text: str) -> str:
 #     match = re.search(r'\b(True|False)\b', text, re.IGNORECASE)
@@ -352,13 +349,11 @@ def extract_non_reasoning_content(
 #         return match.group(1).capitalize()
 #     return text.strip().split()[0] if text.strip() else ''
 
-
 # def _bbh_extract_valid_invalid(text: str) -> str:
 #     match = re.search(r'\b(valid|invalid)\b', text, re.IGNORECASE)
 #     if match:
 #         return match.group(1).lower()
 #     return text.strip().split()[0] if text.strip() else ''
-
 
 # def _bbh_extract_numeric(text: str) -> str:
 #     # Take the last number — models often reason first, then state the answer
@@ -366,7 +361,6 @@ def extract_non_reasoning_content(
 #     if matches:
 #         return matches[-1]
 #     return text.strip()
-
 
 # def _bbh_extract_mcq(text: str) -> str:
 #     patterns = [
@@ -387,13 +381,11 @@ def extract_non_reasoning_content(
 #         return f"({match.group(1).upper()})"
 #     return text.strip()
 
-
 # def _bbh_extract_freetext(text: str) -> str:
 #     first_line = text.strip().split('\n')[0]
 #     first_line = re.sub(r'^answer\s*:\s*', '', first_line,
 #                         flags=re.IGNORECASE).strip()
 #     return first_line
-
 
 # @TEXT_POSTPROCESSORS.register_module('bbh')
 # def bbh_postprocess(text: str, task_name: str = '') -> str:

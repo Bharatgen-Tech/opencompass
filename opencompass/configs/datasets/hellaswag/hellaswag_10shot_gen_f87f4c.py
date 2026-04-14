@@ -4,6 +4,7 @@ from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccwithDetailsEvaluator
 from opencompass.datasets import HellaswagDatasetwithICE
 from opencompass.utils.text_postprocessors import first_option_postprocess
+from opencompass.openicl.icl_retriever import ZeroRetriever
 
 hellaswag_reader_cfg = dict(
     input_columns=['ctx', 'A', 'B', 'C', 'D'],

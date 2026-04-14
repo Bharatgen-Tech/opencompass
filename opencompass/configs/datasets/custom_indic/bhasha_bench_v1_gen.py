@@ -6,19 +6,19 @@ from opencompass.datasets.custom_indic import CustomJsonlMCQDataset
 from opencompass.utils.text_postprocessors import first_option_postprocess
 
 
-BASE_PATH = "/fsxnew/dhrumil.shah/opencompass_benchmarks/data/bhashabench_v1"
+BASE_PATH = '/fsxnew/dhrumil.shah/opencompass_benchmarks/data/bhashabench_v1'
 
 
 domains = [
-    "bba",
-    "bbf",
-    "bbk",
-    "bbl"
+    'bba',
+    'bbf',
+    'bbk',
+    'bbl'
 ]
 
 languages = [
-    "en",
-    "hi"
+    'en',
+    'hi'
 ]
 
 
@@ -30,21 +30,21 @@ for domain in domains:
 
         bhasha_bench_v1_datasets.append(
             dict(
-                abbr=f"bhashabench_{domain}_{lang}",
+                abbr=f'bhashabench_{domain}_{lang}',
 
                 type=CustomJsonlMCQDataset,
 
-                path=f"{BASE_PATH}/{domain}/{lang}/test.jsonl",
+                path=f'{BASE_PATH}/{domain}/{lang}/test.jsonl',
 
-                question_key="question",
+                question_key='question',
 
-                options_keys=["A", "B", "C", "D"],
+                options_keys=['A', 'B', 'C', 'D'],
 
-                answer_key="answer",
+                answer_key='answer',
 
                 reader_cfg=dict(
-                    input_columns=["question", "A", "B", "C", "D"],
-                    output_column="answer"
+                    input_columns=['question', 'A', 'B', 'C', 'D'],
+                    output_column='answer'
                 ),
 
                 infer_cfg=dict(
@@ -55,15 +55,15 @@ for domain in domains:
                         template=dict(
                             round=[
                                 dict(
-                                    role="HUMAN",
+                                    role='HUMAN',
                                     prompt=(
-                                        "Question: {question}\n"
-                                        "A. {A}\n"
-                                        "B. {B}\n"
-                                        "C. {C}\n"
-                                        "D. {D}\n"
-                                        "Answer with only A, B, C, or D.\n"
-                                        "Answer:"
+                                        'Question: {question}\n'
+                                        'A. {A}\n'
+                                        'B. {B}\n'
+                                        'C. {C}\n'
+                                        'D. {D}\n'
+                                        'Answer with only A, B, C, or D.\n'
+                                        'Answer:'
                                     )
                                 ),
                             ]
@@ -78,11 +78,11 @@ for domain in domains:
                 eval_cfg=dict(
                     evaluator=dict(type=AccEvaluator),
 
-                    pred_role="BOT",
+                    pred_role='BOT',
 
                     pred_postprocessor=dict(
                         type=first_option_postprocess,
-                        options="ABCD"
+                        options='ABCD'
                     ),
                 )
             )

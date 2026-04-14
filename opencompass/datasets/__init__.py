@@ -47,6 +47,8 @@ from .crowspairs import *  # noqa: F401, F403
 from .crowspairs_cn import *  # noqa: F401, F403
 from .csl import *  # noqa: F401, F403
 from .custom import *  # noqa: F401, F403
+from .custom_indic import CustomJsonlMCQDataset  # noqa: F401, F403
+from .custom_indic import CustomJsonlPPLDataset  # noqa: F401, F403
 from .cvalues import *  # noqa: F401, F403
 from .dingo import *  # noqa: F401, F403
 from .drcd import *  # noqa: F401, F403
@@ -192,4 +194,3 @@ from .xcopa import *  # noqa: F401, F403
 from .xiezhi import XiezhiDataset, XiezhiRetriever  # noqa: F401, F403
 from .xlsum import *  # noqa: F401, F403
 from .xsum import *  # noqa: F401, F403
-from .custom_indic import CustomJsonlMCQDataset, CustomJsonlPPLDataset
