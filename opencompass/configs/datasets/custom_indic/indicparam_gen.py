@@ -3,7 +3,7 @@ from opencompass.openicl.icl_retriever import ZeroRetriever
 from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccEvaluator
 from opencompass.datasets.custom_indic import CustomJsonlMCQDataset
-from opencompass.utils.text_postprocessors import first_option_postprocess
+from opencompass.utils.text_postprocessors import indic_mcq_postprocess
 
 import os
 
@@ -69,7 +69,7 @@ for file in sorted(os.listdir(base_path)):
                 evaluator=dict(type=AccEvaluator),
                 pred_role='BOT',
                 pred_postprocessor=dict(
-                    type=first_option_postprocess,
+                    type=indic_mcq_postprocess,
                     options='ABCD'
                 ),
             )

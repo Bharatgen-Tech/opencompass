@@ -286,6 +286,115 @@ def extract_non_reasoning_content(
     return non_reasoning_content
 
 
+import unicodedata
+import re
+
+@TEXT_POSTPROCESSORS.register_module('indic_mcq')
+def indic_mcq_postprocess(text: str, options: str = 'ABCD') -> str:
+    """
+    Robust MCQ answer extractor for Indic + English LLM outputs.
+    Handles: Latin letters, Devanagari, Tamil, Telugu, Bengali,
+             Kannada, Malayalam, Gujarati, Punjabi, Odia, ordinals.
+    """
+    if not text:
+        return ''
+
+    # 1. Normalize unicode (NFC) — handles diacritic encoding variants
+    text = unicodedata.normalize('NFC', text.strip())
+    upper = text.upper()
+
+    # 2. Direct single-char Latin match (most common case)
+    if upper in options:
+        return upper
+
+    # 3. Explicit "Answer: X" / "Option X" / "(X)" patterns
+    patterns = [
+        r'\bAnswer\s*[:\-]?\s*([A-D])\b',
+        r'\bOption\s+([A-D])\b',
+        r'^\s*\(?([A-D])\)?[\s\.\)]',   # leading (A) or A. or A)
+        r'([A-D])\s*(?:is correct|is the answer|\.?\s*$)',
+    ]
+    for pat in patterns:
+        m = re.search(pat, upper, re.IGNORECASE | re.MULTILINE)
+        if m:
+            return m.group(1).upper()
+
+    # 4. Script-specific letter mappings (per-language)
+    # Each script has its own letter ordering that maps to A/B/C/D
+    SCRIPT_MAPS = {
+        # Devanagari (Hindi, Marathi, Sanskrit)
+        'अ': 'A', 'ब': 'B', 'स': 'C', 'ड': 'D',
+        'बी': 'B', 'सी': 'C', 'डी': 'D',
+        # Full option labels common in Hindi MCQs
+        'विकल्प अ': 'A', 'विकल्प ब': 'B', 'विकल्प स': 'C', 'विकल्प ड': 'D',
+
+        # Bengali
+        'ক': 'A', 'খ': 'B', 'গ': 'C', 'ঘ': 'D',
+
+        # Tamil
+        'அ': 'A', 'ஆ': 'B', 'இ': 'C', 'ஈ': 'D',
+
+        # Telugu
+        'అ': 'A', 'బ': 'B', 'స': 'C', 'డ': 'D',
+
+        # Kannada
+        'ಅ': 'A', 'ಬ': 'B', 'ಸ': 'C', 'ಡ': 'D',
+
+        # Malayalam
+        'എ': 'A', 'ബി': 'B', 'സി': 'C', 'ഡി': 'D',
+
+        # Gujarati
+        'અ': 'A', 'બ': 'B', 'ક': 'C', 'ડ': 'D',
+
+        # Punjabi (Gurmukhi)
+        'ਏ': 'A', 'ਬੀ': 'B', 'ਸੀ': 'C', 'ਡੀ': 'D',
+
+        # Odia
+        'ଅ': 'A', 'ବ': 'B', 'ସ': 'C', 'ଡ': 'D',
+
+        # Urdu (Arabic script)
+        'الف': 'A', 'ب': 'B', 'ج': 'C', 'د': 'D',
+    }
+
+    # Exact match first (avoids substring collisions)
+    if text in SCRIPT_MAPS:
+        return SCRIPT_MAPS[text]
+
+    # 5. Ordinal word forms (models sometimes say "first option", "पहला", etc.)
+    ORDINALS = {
+        # English
+        'FIRST': 'A', 'SECOND': 'B', 'THIRD': 'C', 'FOURTH': 'D',
+        'ONE': 'A', 'TWO': 'B', 'THREE': 'C', 'FOUR': 'D',
+        '1ST': 'A', '2ND': 'B', '3RD': 'C', '4TH': 'D',
+        '1': 'A', '2': 'B', '3': 'C', '4': 'D',
+
+        # Hindi ordinals
+        'पहला': 'A', 'पहली': 'A', 'दूसरा': 'B', 'दूसरी': 'B',
+        'तीसरा': 'C', 'तीसरी': 'C', 'चौथा': 'D', 'चौथी': 'D',
+    }
+    if upper in ORDINALS:
+        return ORDINALS[upper]
+    for word, val in ORDINALS.items():
+        if word in upper:
+            return val
+
+    # 6. Substring search for script maps (last resort, ordered longest-first
+    #    to avoid e.g. 'ब' matching inside 'बी')
+    for key in sorted(SCRIPT_MAPS, key=len, reverse=True):
+        if key in text:
+            return SCRIPT_MAPS[key]
+
+    # 7. Last resort: find any A/B/C/D in the string
+    m = re.search(r'\b([A-D])\b', upper)
+    if m:
+        return m.group(1)
+
+    return ''
+
+
+
+
+
 # # ──────────────────────────────────────────────────────────────────────────────
 # # BBH (BIG-Bench Hard) postprocessor
 # # ──────────────────────────────────────────────────────────────────────────────
