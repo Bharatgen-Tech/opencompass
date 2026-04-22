@@ -69,7 +69,7 @@ for task in bbh_tasks:
         dict(
             abbr=f'bbh_{task}',
             type=CustomJsonlMCQDataset,
-            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/data/bbh/{task}.jsonl',
+            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/bbh/{task}.jsonl',
             reader_cfg=bbh_reader_cfg,
             infer_cfg=bbh_infer_cfg,
             eval_cfg=dict(

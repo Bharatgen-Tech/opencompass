@@ -68,7 +68,7 @@ for cat in bbq_categories:
         dict(
             abbr=f'bbq_{cat}',
             type=CustomJsonlMCQDataset,
-            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/data/bbq/{cat}.jsonl',
+            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/bbq/{cat}.jsonl',
             question_key='question',
             options_keys=['A', 'B', 'C'],
             answer_key='answer',

@@ -14,7 +14,7 @@ for lang in arc_langs:
         dict(
             abbr=f'arc_indic_{lang}',
             type=CustomJsonlMCQDataset,
-            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/data/arc_indic/{lang}.jsonl',
+            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/arc_indic/{lang}.jsonl',
             question_key='question',
             options_keys=['A', 'B', 'C', 'D'],
             answer_key='answer',

@@ -13,7 +13,7 @@ for task in sanskriti_tasks:
         dict(
             abbr=f'sanskriti_{task}',
             type=CustomJsonlMCQDataset,
-            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/data/sanskriti/{task}_questions.jsonl',
+            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/sanskriti/{task}_questions.jsonl',
             question_key='question',
             options_keys=['A', 'B', 'C', 'D'],
             answer_key='answer',

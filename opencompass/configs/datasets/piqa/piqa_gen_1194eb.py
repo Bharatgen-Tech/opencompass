@@ -34,7 +34,7 @@ piqa_datasets = [
     dict(
         abbr='piqa',
         type=PIQADatasetV2,
-        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/data/piqa',
+        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/piqa',
         reader_cfg=piqa_reader_cfg,
         infer_cfg=piqa_infer_cfg,
         eval_cfg=piqa_eval_cfg)

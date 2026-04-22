@@ -5,7 +5,7 @@ pile_10k_datasets = [
     dict(
         abbr='pile_10k',
         type=CustomJsonlPPLDataset,
-        path='/fsx/opencompass_data/data/pile_10k/test.jsonl',
+        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/pile_10k/test.jsonl',
         text_key='text',
 
         reader_cfg=dict(

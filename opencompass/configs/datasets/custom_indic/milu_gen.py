@@ -17,7 +17,7 @@ for lang in langs:
         dict(
             abbr=f'milu_{lang}',
             type=CustomJsonlMCQDataset,
-            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/data/milu/{lang}.jsonl',
+            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/milu/{lang}.jsonl',
             question_key='question',
             options_keys=['A', 'B', 'C', 'D'],
             answer_key='answer',

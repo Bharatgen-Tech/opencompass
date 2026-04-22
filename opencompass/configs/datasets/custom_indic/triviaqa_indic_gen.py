@@ -14,7 +14,7 @@ for lang in langs:
         dict(
             abbr=f'triviaqa_indic_{lang}',
             type=CustomArrowMCQDataset,
-            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/data/trivia_qa_indic_mcq/{lang}',
+            path=f'/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/trivia_qa_indic_mcq/{lang}',
             split='validation',
             reader_cfg=dict(
                 input_columns=['question', 'A', 'B', 'C', 'D'],

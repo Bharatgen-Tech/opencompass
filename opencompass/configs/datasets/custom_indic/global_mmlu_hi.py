@@ -53,7 +53,7 @@ global_mmlu_hi_datasets = [
     dict(
         abbr='global_mmlu_hi_dev',
         type=CustomJsonlMCQDataset,
-        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/data/global_mmlu_hi/dev.jsonl',
+        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/global_mmlu_hi/dev.jsonl',
         question_key='question',
         options_keys=['A', 'B', 'C', 'D'],
         answer_key='answer',
@@ -64,7 +64,7 @@ global_mmlu_hi_datasets = [
     dict(
         abbr='global_mmlu_hi_test',
         type=CustomJsonlMCQDataset,
-        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/data/global_mmlu_hi/test.jsonl',
+        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/global_mmlu_hi/test.jsonl',
         question_key='question',
         options_keys=['A', 'B', 'C', 'D'],
         answer_key='answer',

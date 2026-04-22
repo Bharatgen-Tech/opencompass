@@ -46,7 +46,7 @@ hellaswag_hi_datasets = [
     dict(
         abbr='hellaswag_hi',
         type=HellaswagDataset,
-        path='/fsxnew/fsxnew/fsxnew/dhrumil.shah/opencompass_benchmarks/data/hellaswag_indic/hi_label_fixed.jsonl',
+        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/hellaswag_indic/hi_label_fixed.jsonl',
         reader_cfg=hellaswag_hi_reader_cfg,
         infer_cfg=hellaswag_hi_infer_cfg,
         eval_cfg=hellaswag_hi_eval_cfg,

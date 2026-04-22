@@ -51,7 +51,7 @@ logiqa_datasets = [
     dict(
         abbr='logiqa_dev',
         type=CustomJsonlMCQDataset,
-        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/data/logiqa/dev.jsonl',
+        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/logiqa/dev.jsonl',
         question_key='question',
         options_keys=['A', 'B', 'C', 'D'],
         answer_key='answer',
@@ -63,7 +63,7 @@ logiqa_datasets = [
     dict(
         abbr='logiqa_test',
         type=CustomJsonlMCQDataset,
-        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/data/logiqa/test.jsonl',
+        path='/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/logiqa/test.jsonl',
         question_key='question',
         options_keys=['A', 'B', 'C', 'D'],
         answer_key='answer',

@@ -4,7 +4,7 @@ from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccEvaluator
 from opencompass.datasets.custom_indic import CustomJsonlMCQDataset
 
-BASE_PATH = '/fsxnew/dhrumil.shah/opencompass_benchmarks/data/boolq_indic'
+BASE_PATH = '/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/boolq_indic'
 
 languages = [
     'en',

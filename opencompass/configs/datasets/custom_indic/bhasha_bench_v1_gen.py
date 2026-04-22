@@ -6,7 +6,7 @@ from opencompass.datasets.custom_indic import CustomJsonlMCQDataset
 from opencompass.utils.text_postprocessors import first_option_postprocess
 
 
-BASE_PATH = '/fsxnew/dhrumil.shah/opencompass_benchmarks/data/bhashabench_v1'
+BASE_PATH = '/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/bhashabench_v1'
 
 
 domains = [

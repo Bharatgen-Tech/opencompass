@@ -7,7 +7,7 @@ from opencompass.utils.text_postprocessors import indic_mcq_postprocess
 
 import os
 
-base_path = '/fsxnew/dhrumil.shah/opencompass_benchmarks/data/indic_param_indic'
+base_path = '/fsxnew/dhrumil.shah/opencompass_benchmarks/opencompass/data/indic_param_indic'
 
 indic_param_indic_datasets = []
 
@@ -52,7 +52,8 @@ for file in sorted(os.listdir(base_path)):
                                     'The above question is written in {lang} language. Please analyze '
                                     'the question and options carefully, and select the correct answer.\n'
                                     'Respond ONLY with one letter (A, B, C, or D) corresponding to the '
-                                    'correct option. Do not provide any explanation or additional text.'
+                                    'correct option. Do not provide any explanation or additional text.\n'
+                                    'Only respond in English.'
                                 )
                             )
                         ]
