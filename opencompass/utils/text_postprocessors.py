@@ -78,9 +78,8 @@ def normalize_hindi_options(text: str) -> str:
         'डी': 'D', 'D': 'D',
     }
     for k, v in mapping.items():
-        text = re.sub(rf'\b{k}\b', v, text)
+        text = text.replace(k, v)  # ✅ NO regex
     return text
-
 
 def first_option_postprocess(text: str, options: str, cushion=True) -> str:
     """Find first valid option for text."""
