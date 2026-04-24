@@ -69,10 +69,22 @@ def think_pred_postprocess(
     else:
         return prediction
 
+import re
+def normalize_hindi_options(text: str) -> str:
+    mapping = {
+        'ए': 'A', 'A': 'A',
+        'बी': 'B', 'B': 'B',
+        'सी': 'C', 'C': 'C',
+        'डी': 'D', 'D': 'D',
+    }
+    for k, v in mapping.items():
+        text = re.sub(rf'\b{k}\b', v, text)
+    return text
+
 
 def first_option_postprocess(text: str, options: str, cushion=True) -> str:
     """Find first valid option for text."""
-
+    text = normalize_hindi_options(text)
     # yapf: disable
     # flake8: noqa: W605
     patterns = [
