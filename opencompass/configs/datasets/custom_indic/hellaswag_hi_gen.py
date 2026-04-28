@@ -3,19 +3,17 @@ from opencompass.openicl.icl_retriever import ZeroRetriever
 from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccEvaluator
 from opencompass.datasets import HFDataset
-from opencompass.utils.text_postprocessors import first_option_postprocess
+from opencompass.utils.text_postprocessors import first_option_postprocess, label_to_abcd
 
 
-# ✅ Convert HF label (0–3) → A/B/C/D
-def label_to_abcd(label):
-    return ['A', 'B', 'C', 'D'][label]
+
 
 
 # ✅ Reader: map HF schema → OpenCompass
 hellaswag_hi_reader_cfg = dict(
     input_columns=['ctx', 'endings'],
     output_column='label',
-    output_postprocess=label_to_abcd,
+    output_postprocess=dict(type='label_to_abcd')
 )
 
 

@@ -69,6 +69,13 @@ def think_pred_postprocess(
     else:
         return prediction
 
+@TEXT_POSTPROCESSORS.register_module('label_to_abcd')
+def label_to_abcd(label):
+    return ['A', 'B', 'C', 'D'][label]
+
+
+
+
 import re
 def normalize_hindi_options(text: str) -> str:
     mapping = {
