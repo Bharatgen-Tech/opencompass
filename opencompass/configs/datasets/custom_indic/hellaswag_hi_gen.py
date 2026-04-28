@@ -12,8 +12,7 @@ from opencompass.utils.text_postprocessors import first_option_postprocess, labe
 # ✅ Reader: map HF schema → OpenCompass
 hellaswag_hi_reader_cfg = dict(
     input_columns=['ctx', 'endings'],
-    output_column='label',
-    output_postprocess=dict(type='label_to_abcd')
+    output_column='label'
 )
 
 

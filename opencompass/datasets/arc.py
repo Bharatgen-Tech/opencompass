@@ -19,7 +19,7 @@ class ARCDataset(BaseDataset):
         if environ.get('DATASET_SOURCE') == 'ModelScope':
             from modelscope import MsDataset
             dataset = MsDataset.load(path,
-                                     split='test',
+                                     split='validation',
                                      subset_name=name)
             rows = []
             for row in dataset:
