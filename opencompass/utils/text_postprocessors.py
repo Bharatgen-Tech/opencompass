@@ -78,25 +78,127 @@ def label_to_abcd(label):
 import re
 
 
-def normalize_hindi_options(text: str) -> str:
+def normalize_indic_options(text: str) -> str:
     mapping = {
-        'ए': 'A',
+        # ── ASCII passthrough ──────────────────────────────────────────
         'A': 'A',
-        'बी': 'B',
         'B': 'B',
-        'सी': 'C',
         'C': 'C',
-        'डी': 'D',
         'D': 'D',
+
+        # ── Devanagari (hi, mr, ne, bodo, dogri, konkani, mai, sa, sdd) ─
+        'ए': 'A',
+        'ऐ': 'A',
+        'अ': 'A',
+        'बी': 'B',
+        'बि': 'B',
+        'ब': 'B',
+        'सी': 'C',
+        'सि': 'C',
+        'स': 'C',
+        'डी': 'D',
+        'डि': 'D',
+        'ड': 'D',
+
+        # ── Bengali / Assamese (bn, as, manipuri_bng) ──────────────────
+        'এ': 'A',
+        'বি': 'B',
+        'ব': 'B',
+        'সি': 'C',
+        'স': 'C',
+        'ডি': 'D',
+        'ড': 'D',
+
+        # ── Gujarati (gu) ──────────────────────────────────────────────
+        'એ': 'A',
+        'બી': 'B',
+        'બ': 'B',
+        'સી': 'C',
+        'સ': 'C',
+        'ડી': 'D',
+        'ડ': 'D',
+
+        # ── Kannada (kn) ───────────────────────────────────────────────
+        'ಎ': 'A',
+        'ಏ': 'A',
+        'ಬಿ': 'B',
+        'ಬ': 'B',
+        'ಸಿ': 'C',
+        'ಸ': 'C',
+        'ಡಿ': 'D',
+        'ಡ': 'D',
+
+        # ── Malayalam (ml) ─────────────────────────────────────────────
+        'എ': 'A',
+        'ഏ': 'A',
+        'ബി': 'B',
+        'ബ': 'B',
+        'സി': 'C',
+        'സ': 'C',
+        'ഡി': 'D',
+        'ഡ': 'D',
+
+        # ── Odia (or) ──────────────────────────────────────────────────
+        'ଏ': 'A',
+        'ବି': 'B',
+        'ବ': 'B',
+        'ସି': 'C',
+        'ସ': 'C',
+        'ଡି': 'D',
+        'ଡ': 'D',
+
+        # ── Gurmukhi / Punjabi (pa) ────────────────────────────────────
+        'ਏ': 'A',
+        'ਬੀ': 'B',
+        'ਬ': 'B',
+        'ਸੀ': 'C',
+        'ਸ': 'C',
+        'ਡੀ': 'D',
+        'ਡ': 'D',
+
+        # ── Tamil (ta) ─────────────────────────────────────────────────
+        'ஏ': 'A',
+        'எ': 'A',
+        'பி': 'B',
+        'ப': 'B',
+        'சி': 'C',
+        'ச': 'C',
+        'டி': 'D',
+        'ட': 'D',
+
+        # ── Telugu (tel) ───────────────────────────────────────────────
+        'ఏ': 'A',
+        'ఎ': 'A',
+        'బి': 'B',
+        'బ': 'B',
+        'సి': 'C',
+        'స': 'C',
+        'డి': 'D',
+        'డ': 'D',
+
+        # ── Kashmiri Nastaliq (kashmiri) ───────────────────────────────
+        'اے': 'A',
+        'الف': 'A',
+        'بی': 'B',
+        'ب': 'B',
+        'سی': 'C',
+        'س': 'C',
+        'ڈی': 'D',
+        'ڈ': 'D',
+
+        # ── Santali / Ol Chiki (santali) ───────────────────────────────
+        'ᱟ': 'A',
     }
-    for k, v in mapping.items():
-        text = text.replace(k, v)  # ✅ NO regex
+    # Sort by length descending so multi-char tokens ('बी', 'बि')
+    # are replaced before their single-char substrings ('ब')
+    for k in sorted(mapping, key=len, reverse=True):
+        text = text.replace(k, mapping[k])
     return text
 
 
 def first_option_postprocess(text: str, options: str, cushion=True) -> str:
     """Find first valid option for text."""
-    text = normalize_hindi_options(text)
+    text = normalize_indic_options(text)
     # yapf: disable
     # flake8: noqa: W605
     patterns = [

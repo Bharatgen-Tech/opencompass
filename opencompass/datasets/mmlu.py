@@ -151,3 +151,65 @@ class MMLUDatasetClean(BaseDataset):
                         raw_data.append(item)
                 dataset[split] = Dataset.from_list(raw_data)
         return dataset
+
+
+@LOAD_DATASET.register_module()
+class MMLUIndicDataset(BaseDataset):
+    """Load MMLU-Indic from local JSONL files.
+
+    File naming convention: mmlu_{lang}_in.jsonl
+    Schema per line:
+        {
+            id,
+            question,
+            choices (list[4]),s
+            answer (int 0-3),
+            subject
+        }
+    """
+
+    @staticmethod
+    def load(path: str, name: str):
+        """
+        Args:
+            path : directory containing all JSONL files
+            name : language file stem, e.g. 'hi_in', 'bn_in', 'gu_in'
+        """
+
+        filepath = osp.join(get_data_path(path), f'mmlu_{name}.jsonl')
+
+        raw_data = []
+        skipped = 0
+
+        with open(filepath, encoding='utf-8') as f:
+            for line_num, line in enumerate(f, 1):
+                try:
+                    item = json.loads(line.strip())
+                    choices = item.get('choices', [])
+
+                    # TODO: Fix upstream dataset so all
+                    # samples have exactly 4 choices.
+                    # Currently skipping malformed samples instead of failing.
+                    if len(choices) != 4:
+                        skipped += 1
+                        continue
+
+                    raw_data.append({
+                        'input': item['question'],
+                        'A': choices[0],
+                        'B': choices[1],
+                        'C': choices[2],
+                        'D': choices[3],
+                        'target': 'ABCD'[item['answer']],
+                        'subject': item['subject'],
+                    })
+
+                except Exception:
+                    # TODO: Investigate malformed JSON lines
+                    skipped += 1
+                    continue
+
+        if skipped > 0:
+            print(f'[WARN] Skipped {skipped} samples in {filepath}')
+
+        return Dataset.from_list(raw_data)
