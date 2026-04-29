@@ -2,7 +2,7 @@ from opencompass.openicl.icl_prompt_template import PromptTemplate
 from opencompass.openicl.icl_retriever import ZeroRetriever
 from opencompass.openicl.icl_inferencer import GenInferencer
 from opencompass.openicl.icl_evaluator import AccEvaluator
-from opencompass.datasets import HFDataset
+from opencompass.datasets import ARCDatasetHF
 from opencompass.utils.text_postprocessors import first_option_postprocess
 
 ARC_c_reader_cfg = dict(
@@ -34,11 +34,13 @@ ARC_c_eval_cfg = dict(
 ARC_c_datasets = [
     dict(
         abbr='ARC-c',
-        type=HFDataset,
-        path='allenai/ai2_arc',
-        name='ARC-Challenge',
+        type=ARCDatasetHF,          # <-- swap in the new class
+        path='allenai/ai2_arc',     # HF repo id
+        name='ARC-Challenge',       # subset
+        split='test',               # 'train' | 'validation' | 'test'
         reader_cfg=ARC_c_reader_cfg,
         infer_cfg=ARC_c_infer_cfg,
         eval_cfg=ARC_c_eval_cfg,
     )
+
 ]

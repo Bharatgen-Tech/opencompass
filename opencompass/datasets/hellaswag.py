@@ -2,12 +2,15 @@ import json
 import os.path as osp
 from os import environ
 
-from datasets import Dataset, DatasetDict
+from datasets import Dataset, DatasetDict, load_dataset
 
 from opencompass.registry import LOAD_DATASET
 from opencompass.utils import get_data_path
 
 from .base import BaseDataset
+
+
+
 
 
 @LOAD_DATASET.register_module()
@@ -232,3 +235,49 @@ class HellaswagDatasetClean(BaseDataset):
                     })
         dataset = Dataset.from_list(dataset)
         return dataset
+
+
+
+
+
+
+@LOAD_DATASET.register_module()
+class HellaswagHFDataset(BaseDataset):
+    """Load ai4bharat/hellaswag-translated directly from Hugging Face.
+
+    Schema on HF
+    ------------
+    ctx    : str   – the Hindi context sentence(s)
+    endings: list  – exactly 4 Hindi completion strings
+    label  : str   – '0', '1', '2', or '3'  (index into endings)
+
+    Output schema (OpenCompass-compatible)
+    --------------------------------------
+    ctx, A, B, C, D : str
+    label           : str  – 'A', 'B', 'C', or 'D'
+    """
+
+    @staticmethod
+    def load(path: str = 'ai4bharat/hellaswag-translated',
+             name: str = 'hi',
+             split: str = 'validation'):
+
+        hf_dataset = load_dataset(path, name=name, split=split,
+                                  trust_remote_code=True)
+        rows = []
+        for item in hf_dataset:
+            endings = item['endings']
+            if len(endings) != 4:          # safety guard
+                continue
+
+            rows.append({
+                'ctx':   item['ctx'],
+                'A':     endings[0],
+                'B':     endings[1],
+                'C':     endings[2],
+                'D':     endings[3],
+                # label is '0'–'3'; convert to 'A'–'D'
+                'label': 'ABCD'[int(item['label'])],
+            })
+
+        return Dataset.from_list(rows)

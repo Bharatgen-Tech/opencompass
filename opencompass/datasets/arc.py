@@ -3,12 +3,12 @@ import os.path as osp
 from os import environ
 
 from datasets import Dataset
+from datasets import load_dataset
 
 from opencompass.registry import LOAD_DATASET
 from opencompass.utils import get_data_path
 
 from .base import BaseDataset
-
 
 @LOAD_DATASET.register_module()
 class ARCDataset(BaseDataset):
@@ -19,7 +19,7 @@ class ARCDataset(BaseDataset):
         if environ.get('DATASET_SOURCE') == 'ModelScope':
             from modelscope import MsDataset
             dataset = MsDataset.load(path,
-                                     split='validation',
+                                     split='train',
                                      subset_name=name)
             rows = []
             for row in dataset:
@@ -146,4 +146,58 @@ class ARCDatasetClean(BaseDataset):
                         'textD': question['choices'][3]['text'],
                         'is_clean': is_clean,
                     })
+        return Dataset.from_list(rows)
+
+
+
+
+
+
+
+
+@LOAD_DATASET.register_module()
+class ARCDatasetHF(BaseDataset):
+    """Load the ARC dataset directly from Hugging Face:
+    https://huggingface.co/datasets/allenai/ai2_arc
+    
+    Subsets : 'ARC-Challenge', 'ARC-Easy'
+    Splits  : 'train', 'validation', 'test'
+    """
+
+    @staticmethod
+    def load(path: str = 'allenai/ai2_arc',
+             name: str = 'ARC-Challenge',
+             split: str = 'test'):
+        """
+        Args:
+            path:  HuggingFace dataset repo id (default: 'allenai/ai2_arc').
+            name:  Subset name – 'ARC-Challenge' or 'ARC-Easy'.
+            split: Dataset split – 'train', 'validation', or 'test'.
+        """
+        hf_dataset = load_dataset(path, name=name, split=split,
+                                  trust_remote_code=True)
+
+        rows = []
+        for item in hf_dataset:
+            choices = item['choices']          # {'text': [...], 'label': [...]}
+            texts   = choices['text']
+            labels  = choices['label']
+
+            # Skip items that don't have exactly 4 options
+            if len(texts) != 4:
+                continue
+
+            # Normalise answerKey: HF labels can be '1','2','3','4' or 'A','B','C','D'
+            answer_key_raw = item['answerKey']
+            answer_key = 'ABCD'[labels.index(answer_key_raw)]
+
+            rows.append({
+                'question': item['question'],
+                'answerKey': answer_key,
+                'textA': texts[0],
+                'textB': texts[1],
+                'textC': texts[2],
+                'textD': texts[3],
+            })
+
         return Dataset.from_list(rows)
