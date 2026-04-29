@@ -10,9 +10,6 @@ from opencompass.utils import get_data_path
 from .base import BaseDataset
 
 
-
-
-
 @LOAD_DATASET.register_module()
 class HellaswagDataset(BaseDataset):
 
@@ -237,10 +234,6 @@ class HellaswagDatasetClean(BaseDataset):
         return dataset
 
 
-
-
-
-
 @LOAD_DATASET.register_module()
 class HellaswagHFDataset(BaseDataset):
     """Load ai4bharat/hellaswag-translated directly from Hugging Face.
@@ -262,20 +255,22 @@ class HellaswagHFDataset(BaseDataset):
              name: str = 'hi',
              split: str = 'validation'):
 
-        hf_dataset = load_dataset(path, name=name, split=split,
+        hf_dataset = load_dataset(path,
+                                  name=name,
+                                  split=split,
                                   trust_remote_code=True)
         rows = []
         for item in hf_dataset:
             endings = item['endings']
-            if len(endings) != 4:          # safety guard
+            if len(endings) != 4:  # safety guard
                 continue
 
             rows.append({
-                'ctx':   item['ctx'],
-                'A':     endings[0],
-                'B':     endings[1],
-                'C':     endings[2],
-                'D':     endings[3],
+                'ctx': item['ctx'],
+                'A': endings[0],
+                'B': endings[1],
+                'C': endings[2],
+                'D': endings[3],
                 # label is '0'–'3'; convert to 'A'–'D'
                 'label': 'ABCD'[int(item['label'])],
             })

@@ -69,24 +69,30 @@ def think_pred_postprocess(
     else:
         return prediction
 
+
 @TEXT_POSTPROCESSORS.register_module('label_to_abcd')
 def label_to_abcd(label):
     return ['A', 'B', 'C', 'D'][label]
 
 
-
-
 import re
+
+
 def normalize_hindi_options(text: str) -> str:
     mapping = {
-        'ए': 'A', 'A': 'A',
-        'बी': 'B', 'B': 'B',
-        'सी': 'C', 'C': 'C',
-        'डी': 'D', 'D': 'D',
+        'ए': 'A',
+        'A': 'A',
+        'बी': 'B',
+        'B': 'B',
+        'सी': 'C',
+        'C': 'C',
+        'डी': 'D',
+        'D': 'D',
     }
     for k, v in mapping.items():
         text = text.replace(k, v)  # ✅ NO regex
     return text
+
 
 def first_option_postprocess(text: str, options: str, cushion=True) -> str:
     """Find first valid option for text."""
@@ -304,8 +310,9 @@ def extract_non_reasoning_content(
     return non_reasoning_content
 
 
-import unicodedata
 import re
+import unicodedata
+
 
 @TEXT_POSTPROCESSORS.register_module('indic_mcq')
 def indic_mcq_postprocess(text: str, options: str = 'ABCD') -> str:
@@ -329,7 +336,7 @@ def indic_mcq_postprocess(text: str, options: str = 'ABCD') -> str:
     patterns = [
         r'\bAnswer\s*[:\-]?\s*([A-D])\b',
         r'\bOption\s+([A-D])\b',
-        r'^\s*\(?([A-D])\)?[\s\.\)]',   # leading (A) or A. or A)
+        r'^\s*\(?([A-D])\)?[\s\.\)]',  # leading (A) or A. or A)
         r'([A-D])\s*(?:is correct|is the answer|\.?\s*$)',
     ]
     for pat in patterns:
@@ -341,37 +348,72 @@ def indic_mcq_postprocess(text: str, options: str = 'ABCD') -> str:
     # Each script has its own letter ordering that maps to A/B/C/D
     SCRIPT_MAPS = {
         # Devanagari (Hindi, Marathi, Sanskrit)
-        'अ': 'A', 'ब': 'B', 'स': 'C', 'ड': 'D',
-        'बी': 'B', 'सी': 'C', 'डी': 'D',
+        'अ': 'A',
+        'ब': 'B',
+        'स': 'C',
+        'ड': 'D',
+        'बी': 'B',
+        'सी': 'C',
+        'डी': 'D',
         # Full option labels common in Hindi MCQs
-        'विकल्प अ': 'A', 'विकल्प ब': 'B', 'विकल्प स': 'C', 'विकल्प ड': 'D',
+        'विकल्प अ': 'A',
+        'विकल्प ब': 'B',
+        'विकल्प स': 'C',
+        'विकल्प ड': 'D',
 
         # Bengali
-        'ক': 'A', 'খ': 'B', 'গ': 'C', 'ঘ': 'D',
+        'ক': 'A',
+        'খ': 'B',
+        'গ': 'C',
+        'ঘ': 'D',
 
         # Tamil
-        'அ': 'A', 'ஆ': 'B', 'இ': 'C', 'ஈ': 'D',
+        'அ': 'A',
+        'ஆ': 'B',
+        'இ': 'C',
+        'ஈ': 'D',
 
         # Telugu
-        'అ': 'A', 'బ': 'B', 'స': 'C', 'డ': 'D',
+        'అ': 'A',
+        'బ': 'B',
+        'స': 'C',
+        'డ': 'D',
 
         # Kannada
-        'ಅ': 'A', 'ಬ': 'B', 'ಸ': 'C', 'ಡ': 'D',
+        'ಅ': 'A',
+        'ಬ': 'B',
+        'ಸ': 'C',
+        'ಡ': 'D',
 
         # Malayalam
-        'എ': 'A', 'ബി': 'B', 'സി': 'C', 'ഡി': 'D',
+        'എ': 'A',
+        'ബി': 'B',
+        'സി': 'C',
+        'ഡി': 'D',
 
         # Gujarati
-        'અ': 'A', 'બ': 'B', 'ક': 'C', 'ડ': 'D',
+        'અ': 'A',
+        'બ': 'B',
+        'ક': 'C',
+        'ડ': 'D',
 
         # Punjabi (Gurmukhi)
-        'ਏ': 'A', 'ਬੀ': 'B', 'ਸੀ': 'C', 'ਡੀ': 'D',
+        'ਏ': 'A',
+        'ਬੀ': 'B',
+        'ਸੀ': 'C',
+        'ਡੀ': 'D',
 
         # Odia
-        'ଅ': 'A', 'ବ': 'B', 'ସ': 'C', 'ଡ': 'D',
+        'ଅ': 'A',
+        'ବ': 'B',
+        'ସ': 'C',
+        'ଡ': 'D',
 
         # Urdu (Arabic script)
-        'الف': 'A', 'ب': 'B', 'ج': 'C', 'د': 'D',
+        'الف': 'A',
+        'ب': 'B',
+        'ج': 'C',
+        'د': 'D',
     }
 
     # Exact match first (avoids substring collisions)
@@ -381,14 +423,32 @@ def indic_mcq_postprocess(text: str, options: str = 'ABCD') -> str:
     # 5. Ordinal word forms (models sometimes say "first option", "पहला", etc.)
     ORDINALS = {
         # English
-        'FIRST': 'A', 'SECOND': 'B', 'THIRD': 'C', 'FOURTH': 'D',
-        'ONE': 'A', 'TWO': 'B', 'THREE': 'C', 'FOUR': 'D',
-        '1ST': 'A', '2ND': 'B', '3RD': 'C', '4TH': 'D',
-        '1': 'A', '2': 'B', '3': 'C', '4': 'D',
+        'FIRST': 'A',
+        'SECOND': 'B',
+        'THIRD': 'C',
+        'FOURTH': 'D',
+        'ONE': 'A',
+        'TWO': 'B',
+        'THREE': 'C',
+        'FOUR': 'D',
+        '1ST': 'A',
+        '2ND': 'B',
+        '3RD': 'C',
+        '4TH': 'D',
+        '1': 'A',
+        '2': 'B',
+        '3': 'C',
+        '4': 'D',
 
         # Hindi ordinals
-        'पहला': 'A', 'पहली': 'A', 'दूसरा': 'B', 'दूसरी': 'B',
-        'तीसरा': 'C', 'तीसरी': 'C', 'चौथा': 'D', 'चौथी': 'D',
+        'पहला': 'A',
+        'पहली': 'A',
+        'दूसरा': 'B',
+        'दूसरी': 'B',
+        'तीसरा': 'C',
+        'तीसरी': 'C',
+        'चौथा': 'D',
+        'चौथी': 'D',
     }
     if upper in ORDINALS:
         return ORDINALS[upper]
