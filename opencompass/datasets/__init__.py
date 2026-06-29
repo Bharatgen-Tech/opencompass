@@ -1,3 +1,5 @@
+from .advancedIF import AdvancedIFDataset  # noqa: F401
+from .advancedIF import advancedif_rubric_postprocess  # noqa: F401
 from .advglue import *  # noqa: F401, F403
 from .afqmcd import *  # noqa: F401, F403
 from .agieval import *  # noqa: F401, F403
@@ -7,6 +9,7 @@ from .anthropics_evals import *  # noqa: F401, F403
 from .apps import *  # noqa: F401, F403
 from .arc import *  # noqa: F401, F403
 from .arc_prize_public_evaluation import *  # noqa: F401, F403
+from .arxivrollbench import *  # noqa: F401, F403
 from .ax import *  # noqa: F401, F403
 from .babilong import *  # noqa: F401, F403
 from .bbeh import *  # noqa: F401, F403
@@ -30,6 +33,7 @@ from .chinese_simpleqa import *  # noqa: F401, F403
 from .cibench import *  # noqa: F401, F403
 from .circular import *  # noqa: F401, F403
 from .civilcomments import *  # noqa: F401, F403
+from .clbench import *  # noqa: F401, F403
 from .climaqa import *  # noqa: F401, F403
 from .clozeTest_maxmin import *  # noqa: F401, F403
 from .cluewsc import *  # noqa: F401, F403
@@ -126,6 +130,8 @@ from .MMLUArabic import *  # noqa: F401, F403
 from .mmmlu import *  # noqa: F401, F403
 from .mol_instructions_chem import *  # noqa: F401, F403
 from .moleculariq import *  # noqa: F401, F403
+from .mp20 import *  # noqa: F401, F403
+from .mrcr import *  # noqa: F401, F403
 from .multipl_e import *  # noqa: F401, F403
 from .multirc import *  # noqa: F401, F403
 from .musr import *  # noqa: F401, F403
@@ -140,6 +146,7 @@ from .olymmath import *  # noqa: F401, F403
 from .OlympiadBench import *  # noqa: F401, F403
 from .OpenFinData import *  # noqa: F401, F403
 from .OpenSWI import *  # noqa: F401, F403
+from .perspectivegap import *  # noqa: F401, F403
 from .phybench import *  # noqa: F401, F403
 from .physics import *  # noqa: F401, F403
 from .PI_LLM import PILLMDataset  # noqa: F401
@@ -156,12 +163,14 @@ from .realtoxicprompts import *  # noqa: F401, F403
 from .reasonbench import ReasonBenchDataset  # noqa: F401, F403
 from .record import *  # noqa: F401, F403
 from .ruler import *  # noqa: F401, F403
+from .s2_tomg_bench import *  # noqa: F401, F403
 from .safety import *  # noqa: F401, F403
 from .scibench import ScibenchDataset, scibench_postprocess  # noqa: F401, F403
 from .scicode import *  # noqa: F401, F403
 from .SciEval import SciEvalDataset  # noqa: F401
 from .SciKnowEval import *  # noqa: F401, F403
 from .SciReasoner import *  # noqa: F401, F403
+from .SciReasoner1_5 import *  # noqa: F401, F403
 from .SeedBench import *  # noqa: F401, F403
 from .simpleqa import *  # noqa: F401, F403
 from .siqa import *  # noqa: F401, F403
@@ -194,3 +203,6 @@ from .xcopa import *  # noqa: F401, F403
 from .xiezhi import XiezhiDataset, XiezhiRetriever  # noqa: F401, F403
 from .xlsum import *  # noqa: F401, F403
 from .xsum import *  # noqa: F401, F403
+from .zebralogic import ZebraLogicDataset  # noqa: F401
+from .zebralogic import ZebraLogicGridEvaluator  # noqa: F401
+from .zebralogic import ZebraLogicMCEvaluator  # noqa: F401
